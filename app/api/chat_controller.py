@@ -15,8 +15,7 @@ async def llm_stream_view(request: Request):
     except Exception as e:
         return JSONResponse({"error": str(e)}, status_code=400)
 
-    print("STREAMING STARTED")
     async def streamer():
         async for chunk in service.generate_response(user_prompt):
-            yield json.dumps(chunk.__dict__) + "\n"
+            yield chunk
     return StreamingResponse(streamer(), media_type="application/x-ndjson")
