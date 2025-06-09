@@ -6,6 +6,17 @@ from app.service.llm_orchestration_service import LLMOrchestrationService
 app = FastAPI()
 service = LLMOrchestrationService()
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+
 @app.post("/v1/chat")
 async def llm_stream_view(request: Request):
     try:
