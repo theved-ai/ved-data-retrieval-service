@@ -1,0 +1,10 @@
+ai_agent_name = 'MCP AI Agent'
+mcp_transport_name = 'MCP streamable http transport object'
+mcp_hostname_env_variable = 'MCP_SERVER_HOSTNAME'
+ai_agent_resp_raw_event_key = 'raw_response_event'
+ai_agent_resp_stream_event_key = 'run_item_stream_event'
+event_tool_item_type = 'tool_call_item'
+
+testing_user_id = '7dcb16b8-c05c-4ec4-9524-0003e11acd2a'
+default_category = 'default'
+controller_package = 'app.controller'
