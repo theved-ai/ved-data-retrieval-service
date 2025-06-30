@@ -1,11 +1,11 @@
 from abc import abstractmethod, ABC
 from typing import Optional
 
-from app.dto.chat_persist_request_dto import ChatPersistRequest
-from app.dto.create_conversation_dto import CreateConversation
+from app.dto.chat_persist_request import ChatPersistRequest
+from app.dto.create_conversation import CreateConversation
 from app.dto.db_chat_record import DbChatRecord
 from app.dto.db_conversation_record import DbConversationRecord
-from app.dto.db_model_metadata_dto import DbModelMetadataDto
+from app.dto.db_model_metadata_record import DbModelMetadataDto
 
 
 class DbProcessorBase(ABC):

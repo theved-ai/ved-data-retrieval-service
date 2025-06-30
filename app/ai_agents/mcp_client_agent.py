@@ -8,33 +8,35 @@ from agents import Agent, Runner
 from agents.mcp.server import MCPServerStreamableHttp
 from openai.types.responses import ResponseTextDeltaEvent
 
-from app.ai_agents.base import AgentBase
-from app.dto.agent_request_dto import AgentRequestDto
-from app.dto.llm_response_chunk_dto import LlmResponseChunkDto
+from app.ai_agents.ai_agent_base import AgentBase
+from app.dto.agent_request import AgentRequestDto
+from app.dto.llm_response_chunk import LlmResponseChunkDto
 from app.enums.llm_response_event_type import LlmResponseEventType
-from app.utils.application_constants import mcp_transport_name, mcp_hostname_env_variable, ai_agent_name, \
-    ai_agent_resp_raw_event_key, ai_agent_resp_stream_event_key, event_tool_item_type
-from app.utils.exception_messages import mcp_hostname_mandatory
+from app.utils.application_constants import mcp_transport_name, mcp_hostname_key, ai_agent_name, \
+    ai_agent_resp_raw_event_key, ai_agent_resp_stream_event_key, event_tool_item_type, user_id_header_key, \
+    default_mcp_request_timeout_in_sec, \
+    mcp_request_timeout_in_sec_key
+from app.utils.application_constants import mcp_hostname_mandatory
 
 
 def _make_headers(user_id) -> dict[str, str]:
-    headers = {"user_uuid": user_id}
+    headers = {user_id_header_key: user_id}
     return headers
 
 
 async def _new_transport(req) -> MCPServerStreamableHttp:
-    value = os.getenv(mcp_hostname_env_variable)
-    if value is None: raise KeyError(mcp_hostname_mandatory)
-    mcp_hostname: str = value
+    mcp_hostname = os.getenv(mcp_hostname_key)
+    mcp_timeout_in_sec = os.getenv(mcp_request_timeout_in_sec_key) or default_mcp_request_timeout_in_sec
+    if mcp_hostname is None: raise KeyError(mcp_hostname_mandatory)
     return MCPServerStreamableHttp(
         name=mcp_transport_name,
         cache_tools_list=True,
         params={
             "url": mcp_hostname,
-            "timeout": timedelta(minutes=10),
+            "timeout": timedelta(seconds=mcp_timeout_in_sec),
             "headers": _make_headers(req.user_id),
         },
-        client_session_timeout_seconds=10_000,
+        client_session_timeout_seconds=mcp_timeout_in_sec+20,
     )
 
 

@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 from app.dto.conversation_create_response import ConversationCreateResponse
 from app.dto.conversation_fetch_response import ConversationFetchResponse
-from app.dto.create_conversation_dto import CreateConversation
+from app.dto.create_conversation import CreateConversation
 from app.dto.fetch_conversation_request import FetchConversationRequest
 
 

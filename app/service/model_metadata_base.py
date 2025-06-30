@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from app.dto.model_metadata_dto import ModelMetadataDto
+from app.dto.model_metadata import ModelMetadataDto
 
 
 class ModelMetadataBase(ABC):

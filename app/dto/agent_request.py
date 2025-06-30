@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
-from app.dto.chat_request_dto import ChatRequest
-from app.dto.model_metadata_dto import ModelMetadataDto
+from app.dto.chat_request import ChatRequest
+from app.dto.model_metadata import ModelMetadataDto
 
 
 def build_agent_req_dto(model_metadata: ModelMetadataDto, chat_request: ChatRequest):

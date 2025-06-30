@@ -1,4 +1,7 @@
 import logging.config
+import os
+
+from app.utils.application_constants import root_log_level_key
 
 LOGGING_CONFIG = {
     "version": 1,
@@ -15,7 +18,7 @@ LOGGING_CONFIG = {
         },
     },
     "root": {
-        "level": "INFO",
+        "level": os.getenv(root_log_level_key),
         "handlers": ["console"],
     },
 }

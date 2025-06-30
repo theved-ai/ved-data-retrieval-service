@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 
-from app.dto.chat_request_dto import ChatRequest
+from app.dto.chat_request import ChatRequest
 
 
 class LLMOrchestratorServiceBase(ABC):

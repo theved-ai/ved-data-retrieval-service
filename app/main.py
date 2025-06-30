@@ -5,7 +5,9 @@ import uvicorn
 from fastapi.middleware.cors import CORSMiddleware
 from app.controller.master_controller import MasterController
 from app.db.postgres.psql_conn_pool import init_pg_pool, close_pg_pool
-from app.utils.application_constants import controller_package
+from app.utils.app_utils import ensure
+from app.utils.global_exception_handler import global_exception_handler
+from app.utils.application_constants import controller_package, db_url_key, db_details_not_found, main_path_key
 from app.utils.env_loader import load_environment
 from app.config.logging_config import logger
 from app.utils.import_util import load_package
@@ -15,10 +17,8 @@ load_package(controller_package)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    db_url = os.getenv("DB_URL")
-    if not db_url:
-        logger.error("DB_URL not set. Exiting.")
-        raise RuntimeError("Missing DB_URL")
+    db_url = os.getenv(db_url_key)
+    ensure(lambda: db_url is not None, db_details_not_found)
     logger.info("App is starting up…")
     await init_pg_pool(db_url)
     yield
@@ -26,6 +26,7 @@ async def lifespan(app: FastAPI):
     logger.info("App is shutting down…")
 
 app = FastAPI(lifespan=lifespan)
+app.add_exception_handler(Exception, global_exception_handler)
 
 app.add_middleware(
     CORSMiddleware,
@@ -39,7 +40,7 @@ app.include_router(MasterController.router)
 
 def main():
     uvicorn.run(
-        "main:app",
+        os.getenv(main_path_key),
         host=os.getenv("HOST", "localhost"),
         port=int(os.getenv("PORT", 8081)),
         reload=os.getenv("RELOAD", "false").lower() == "true",

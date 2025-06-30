@@ -1,13 +1,15 @@
 from typing import AsyncGenerator
 
 from app.ai_agents.mcp_client_agent import MCPClientAgent
-from app.dto.agent_request_dto import build_agent_req_dto
-from app.dto.chat_request_dto import ChatRequest
-from app.dto.llm_response_chunk_dto import LlmResponseChunkDto
+from app.decorators.try_catch_decorator import try_catch_wrapper
+from app.dto.agent_request import build_agent_req_dto
+from app.dto.chat_request import ChatRequest
+from app.dto.llm_response_chunk import LlmResponseChunkDto
 from app.enums.llm_response_event_type import LlmResponseEventType
-from app.orchestrator.base import LLMOrchestratorBase
+from app.orchestrator.llm_orchestrator_base import LLMOrchestratorBase
 from app.service.impl.mode_metadata_service import ModelMetadataService
-from app.utils.application_constants import default_category
+from app.utils.application_constants import default_category, openai_orchestration_failed
+from app.config.logging_config import logger
 
 
 class OpenAIOrchestrator(LLMOrchestratorBase):

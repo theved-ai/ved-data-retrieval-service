@@ -2,7 +2,7 @@ from datetime import datetime
 
 from pydantic import BaseModel
 
-from app.dto.chat_data_dto import ChatDataDto
+from app.dto.chat_data import ChatDataDto
 
 
 class BulkChatResponse(BaseModel):

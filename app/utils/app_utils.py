@@ -1,19 +1,25 @@
+from datetime import datetime
 from typing import Callable, TypeVar, Union, Awaitable
+from zoneinfo import ZoneInfo
+from app.config.logging_config import logger
 
 
-def ensure(predicate: Callable[[], bool], exception: Exception) -> None:
+def current_time_ist():
+    return datetime.now(tz=ZoneInfo('Asia/Kolkata'))
+
+def ensure(predicate: Callable[[], bool], exception: str) -> None:
     """
     Evaluate predicate(); if it returns False, raise the given exception.
     """
     if not predicate():
-        raise exception
+        logger.error(exception)
 
-async def ensure_async(predicate: Callable[[], Awaitable[bool]], exception: Exception) -> None:
+async def ensure_async(predicate: Callable[[], Awaitable[bool]], exception: str) -> None:
     """
     Evaluate predicate()in async; if it returns False, raise the given exception.
     """
     if not await predicate():
-        raise exception
+        logger.error(exception)
 
 
 T = TypeVar("T")
@@ -31,8 +37,8 @@ def execute_if_or_else(
 
 async def execute_try_catch_async(
         try_fn: Callable[[], Awaitable[T]],
-        catch_fn: Callable[[Exception], Exception]
-) -> T:
+        catch_fn: Callable[[Exception], None]
+) -> T | None:
     """
     Executes the async try_fn. If it raises, catch_fn(exc) is called
     to produce a new Exception which is then raised.
@@ -40,5 +46,5 @@ async def execute_try_catch_async(
     try:
         return await try_fn()
     except Exception as e:
-        new_exc = catch_fn(e)
-        raise new_exc from e
+        catch_fn(e)
+        return None
