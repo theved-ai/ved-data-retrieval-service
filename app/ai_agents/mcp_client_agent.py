@@ -47,7 +47,7 @@ class MCPClientAgent(AgentBase):
             if self.agent is None:
                 self.agent = Agent(
                     name=ai_agent_name,
-                    instructions = req.model_metadata.model_instruction.format(date=datetime.now().strftime("%Y-%m-%d")),
+                    instructions = req.model_metadata.model_instruction.format(date=datetime.now().strftime("%Y-%m-%d"), conversation_id=req.conversation_id),
                     model=req.model_metadata.model_name,
                     mcp_servers=[server],
                 )

@@ -19,6 +19,5 @@ class LLMOrchestrationService(LLMOrchestratorServiceBase):
             lambda: self.conversation_service.does_conversation_exist(chat_request.conversation_id),
             RuntimeError(f'Conversation does not exist: {chat_request.conversation_id}')
         )
-        await self.conversation_service.does_conversation_exist(chat_request.conversation_id)
         async for chunk in self.openai_orchestrator.process(chat_request):
             yield chunk
