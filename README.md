@@ -56,7 +56,7 @@ Create .env in the repo root:
 
 ```
 OPENAI_API_KEY=sk-…
-MCP_URL=http://localhost:8080/mcp
+MCP_SERVER_HOSTNAME=http://localhost:8080/mcp
 DB_URL=postgresql://postgres:secret@localhost:5432/ved_master_db
 INGEST_BASE_URL=http://localhost:8085
 ```

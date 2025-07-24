@@ -19,23 +19,23 @@ from app.config.logging_config import logger
 
 class PostgresProcessor(DbProcessorBase):
 
-    @try_catch_wrapper(logger_fn= lambda e: logger.error(db_conversation_insertion_failed))
+    @try_catch_wrapper(logger_fn= lambda e: logger.exception(f"{db_conversation_insertion_failed}: {e}"))
     async def insert_conversation(self, req: CreateConversation) -> DbConversationRecord:
         row = await fetch_one(query_insert_conversation,req.user_id, req.title, current_time_ist())
         return DbConversationRecord(**dict(row))
 
-    @try_catch_wrapper(logger_fn= lambda e: logger.error(db_conversation_insertion_failed))
+    @try_catch_wrapper(logger_fn= lambda e: logger.exception(f"{db_conversation_insertion_failed}: {e}"))
     async def insert_chat(self, req: ChatPersistRequest) -> DbChatRecord:
         row = await fetch_one(query_insert_chat,req.conversation_id, json.dumps(req.content), json.dumps(req.tools_called), req.model_metadata_id)
         return DbChatRecord(**dict(row))
 
-    @try_catch_wrapper(logger_fn= lambda e: logger.error(db_model_metadata_fetch_failed))
+    @try_catch_wrapper(logger_fn= lambda e: logger.exception(f"{db_model_metadata_fetch_failed}: {e}"))
     async def fetch_active_model_metadata_by_category(self, category: str) -> DbModelMetadataDto:
         row = await fetch_one(query_model_metadata_by_category, category)
         ensure(lambda: row is not None, no_default_active_model_for_category.format(category=category))
         return DbModelMetadataDto(**dict(row), model_configuration=row['model_config'])
 
-    @try_catch_wrapper(logger_fn= lambda e: logger.error(db_conversation_fetch_failed))
+    @try_catch_wrapper(logger_fn= lambda e: logger.exception(f"{db_conversation_fetch_failed}: {e}"))
     async def fetch_conversation_by_id(self, conversation_id: str) -> Optional[DbConversationRecord]:
         row = await fetch_one(query_fetch_conversation_by_conversation_id, conversation_id)
         return execute_if_or_else(
